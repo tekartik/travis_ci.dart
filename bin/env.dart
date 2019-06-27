@@ -1,8 +1,5 @@
-import 'dart:io';
-
-import 'install.dart';
+import 'package:tekartik_travis_ci_flutter/bin/env.dart' as env;
 
 Future main() async {
-  // We write the path to be sourced
-  stdout.write(await travisCreateEnvFile());
+  await env.main();
 }

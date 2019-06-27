@@ -1,6 +1,6 @@
 name: tekartik_travis_ci_flutter
 description: Travis CI flutter setup helper
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/tekartik/travis_ci_flutter.dart
 author: alex <alex@tekartik.com>
 
@@ -9,6 +9,9 @@ environment:
 
 dependencies:
   process_run: '>=0.10.0'
+
+dev_dependencies:
+  test:
 
 dependency_overrides:
 # tmp
