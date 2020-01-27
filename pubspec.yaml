@@ -12,6 +12,7 @@ dependencies:
 
 dev_dependencies:
   test:
+  pedantic:
 
 dependency_overrides:
 # tmp
