@@ -5,8 +5,7 @@ Future main() async {
 
   await shell.run('''
     
-flutter doctor
-pub upgrade
+# flutter doctor
 pub run test
   
 ''');
