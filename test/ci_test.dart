@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 import 'package:process_run/shell_run.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   group('ci', () {
     /*
     test('env', () async {
@@ -14,6 +14,9 @@ main() {
       await install.main();
     });
      */
+    test('version', () async {
+      await run('flutter version');
+    });
     test('create', () async {
       var dir = join('.dart_tool', 'travis_ci_flutter', 'test', 'project');
       try {
@@ -25,7 +28,10 @@ main() {
 
       await run('flutter create $dir');
       var shell = Shell(workingDirectory: dir);
-      await shell.run('flutter packages get');
+      await shell.run('''
+      flutter packages get
+      flutter test
+      ''');
     });
   });
 }
