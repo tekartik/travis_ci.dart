@@ -6,6 +6,8 @@ Future main() async {
   await shell.run('''
     
 flutter doctor
+pub upgrade
+pub run test
   
 ''');
 }
