@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
 
@@ -32,22 +33,36 @@ export PATH=${travisFlutterTop}/bin:${travisFlutterTop}/bin/cache/dart-sdk/bin:\
 }
 
 Future main() async {
+  // We use the dart version (stable, dev) as the channel
+  var channel = travisDartVersion;
+  var directory = travisFlutterTop;
+
+  await install(channel: channel, directory: directory);
+
+  var path = await travisCreateEnvFile();
+  print('env_file: $path');
+  print(await File(path).readAsString());
+}
+
+/// Install flutter in the specified directory.
+Future install(
+    {@required String channel, @required String directory, bool force}) async {
+  force ??= false;
   var shell = Shell();
-
-  //print(jsonPretty(Platform.environment));
-  //  "TRAVIS_DART_VERSION": "stable",
-
-  print('dartVersion: $travisDartVersion');
-  print('flutterTop: $travisFlutterTop');
 
   //TODO
   bool install = true; //!runningOnTravis;
 
-  await new Directory(dirname(travisFlutterTop)).create(recursive: true);
+  if (force) {
+    try {
+      await new Directory(directory).delete(recursive: true);
+    } catch (_) {}
+  }
+  await new Directory(dirname(directory)).create(recursive: true);
 
   if (install) {
     // update
-    if (Directory(join(travisFlutterTop, '.git')).existsSync()) {
+    if (Directory(join(directory, '.git')).existsSync()) {
       await shell.run('''
       
       git pull
@@ -56,20 +71,26 @@ Future main() async {
     } else {
       // install
 
+      // depth 1 not longer working
+      // git clone https://github.com/flutter/flutter.git --depth 1 ${directory} -b stable
       await shell.run('''
-    
-# ls $travisFlutterTop
-git clone https://github.com/flutter/flutter.git --depth 1 ${travisFlutterTop} -b ${travisDartVersion}
-
+git clone https://github.com/flutter/flutter.git --depth 1 --branch ${channel} ${directory}
 ''');
     }
+    // Add to env
+    var env = <String, String>{
+      'PATH':
+          '${directory}/bin:${directory}/bin/cache/dart-sdk/bin:${shellEnvironment['PATH']}'
+    };
+    print(env);
+    shell = Shell(
+        environment: env,
+        workingDirectory: directory,
+        includeParentEnvironment: false);
     await shell.run('''
-$travisFlutterTop/bin/flutter doctor
+bin/flutter --version
 ''');
   }
-  var path = await travisCreateEnvFile();
-  print('env_file: $path');
-  print(await File(path).readAsString());
 }
 
 // {
