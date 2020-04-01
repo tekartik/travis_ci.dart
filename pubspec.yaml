@@ -1,0 +1,22 @@
+name: tekartik_travis_ci_flutter
+description: Travis CI flutter setup helper
+version: 0.2.0
+homepage: https://github.com/tekartik/travis_ci_flutter.dart
+author: alex <alex@tekartik.com>
+
+environment:
+  sdk: '>=2.7.0-dev <3.0.0'
+
+dependencies:
+  meta:
+  process_run: '>=0.10.8'
+
+dev_dependencies:
+  test:
+  pedantic:
+  path:
+
+dependency_overrides:
+# tmp
+#  process_run:
+#    path: ../process_run.dart
