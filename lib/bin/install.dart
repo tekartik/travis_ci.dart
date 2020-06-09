@@ -20,9 +20,14 @@ String get travisDartVersion =>
 String get travisFlutterTop =>
     '${_homePath}/.tekartik/travis/${travisDartVersion}/flutter';
 
+/// Try travis temp dir first
+String get travisTempDir =>
+    Platform.environment['TRAVIS_TMPDIR'] ?? Directory.systemTemp.path;
+
 /// Create the envir file
-Future<String> travisCreateEnvFile() async {
-  var tempDir = await Directory.systemTemp.createTemp();
+Future<String> travisCreateEnvFile({bool verbose}) async {
+  verbose ??= false;
+  var tempDir = await Directory(travisTempDir).createTemp();
 
   const envRc = 'env.rc';
 
@@ -34,6 +39,10 @@ export PATH=${travisFlutterTop}/bin:${travisFlutterTop}/bin/cache/dart-sdk/bin:\
 
   var dst = File(join(tempDir.path, envRc));
   await dst.writeAsString(content, flush: true);
+  if (verbose) {
+    stderr.writeln('path: $dst');
+    stderr.writeln('content:\n$content');
+  }
   return dst.path;
 }
 
