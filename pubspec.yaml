@@ -1,6 +1,6 @@
 name: tekartik_travis_ci_flutter
 description: Travis CI flutter setup helper
-version: 0.2.0
+version: 0.2.1
 homepage: https://github.com/tekartik/travis_ci_flutter.dart
 author: alex <alex@tekartik.com>
 

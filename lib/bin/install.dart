@@ -7,13 +7,18 @@ import 'package:process_run/shell.dart';
 //  'TRAVIS': 'true',
 //  'TRAVIS_DART_VERSION': 'stable',
 
-bool get runningOnTravis => Platform.environment['TRAVIS'] == 'true';
+bool _runningOnTravis;
+bool get runningOnTravis =>
+    _runningOnTravis ??= Platform.environment['TRAVIS'] == 'true';
+String get _homePath =>
+    (runningOnTravis ? Platform.environment['TRAVIS_HOME'] : null) ??
+    userHomePath;
 
 String get travisDartVersion =>
     Platform.environment['TRAVIS_DART_VERSION'] ?? 'stable';
 
 String get travisFlutterTop =>
-    '${userHomePath}/.tekartik/travis/${travisDartVersion}/flutter';
+    '${_homePath}/.tekartik/travis/${travisDartVersion}/flutter';
 
 /// Create the envir file
 Future<String> travisCreateEnvFile() async {
