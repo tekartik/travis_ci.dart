@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
+import 'package:tekartik_travis_ci_flutter/src/init.dart';
 
 //  'TRAVIS': 'true',
 //  'TRAVIS_DART_VERSION': 'stable',
@@ -64,6 +65,8 @@ Future install(
   force ??= false;
   var shell = Shell();
 
+  // Needed to precompile the env executable that will be sourced
+  await init();
   //TODO
   var install = true; //!runningOnTravis;
 
