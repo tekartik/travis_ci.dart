@@ -3,21 +3,32 @@ import 'dart:io';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
+import 'package:tekartik_travis_ci_flutter/src/init.dart';
 
 //  'TRAVIS': 'true',
 //  'TRAVIS_DART_VERSION': 'stable',
 
-bool get runningOnTravis => Platform.environment['TRAVIS'] == 'true';
+bool _runningOnTravis;
+bool get runningOnTravis =>
+    _runningOnTravis ??= Platform.environment['TRAVIS'] == 'true';
+String get _homePath =>
+    (runningOnTravis ? Platform.environment['TRAVIS_HOME'] : null) ??
+    userHomePath;
 
 String get travisDartVersion =>
     Platform.environment['TRAVIS_DART_VERSION'] ?? 'stable';
 
 String get travisFlutterTop =>
-    '${userHomePath}/.tekartik/travis/${travisDartVersion}/flutter';
+    '${_homePath}/.tekartik/travis/${travisDartVersion}/flutter';
+
+/// Try travis temp dir first
+String get travisTempDir =>
+    Platform.environment['TRAVIS_TMPDIR'] ?? Directory.systemTemp.path;
 
 /// Create the envir file
-Future<String> travisCreateEnvFile() async {
-  var tempDir = await Directory.systemTemp.createTemp();
+Future<String> travisCreateEnvFile({bool verbose}) async {
+  verbose ??= false;
+  var tempDir = await Directory(travisTempDir).createTemp();
 
   const envRc = 'env.rc';
 
@@ -29,6 +40,10 @@ export PATH=${travisFlutterTop}/bin:${travisFlutterTop}/bin/cache/dart-sdk/bin:\
 
   var dst = File(join(tempDir.path, envRc));
   await dst.writeAsString(content, flush: true);
+  if (verbose) {
+    stderr.writeln('path: $dst');
+    stderr.writeln('content:\n$content');
+  }
   return dst.path;
 }
 
@@ -50,6 +65,8 @@ Future install(
   force ??= false;
   var shell = Shell();
 
+  // Needed to precompile the env executable that will be sourced
+  await init();
   //TODO
   var install = true; //!runningOnTravis;
 
