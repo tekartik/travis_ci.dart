@@ -15,7 +15,7 @@ void main() {
     });
      */
     test('version', () async {
-      await run('flutter version');
+      await run('flutter --version');
     });
     test('create', () async {
       var dir = join('.dart_tool', 'travis_ci_flutter', 'test', 'project');
