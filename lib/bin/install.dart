@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 import 'package:process_run/shell.dart';
 import 'package:tekartik_travis_ci_flutter/src/init.dart';
@@ -8,9 +7,11 @@ import 'package:tekartik_travis_ci_flutter/src/init.dart';
 //  'TRAVIS': 'true',
 //  'TRAVIS_DART_VERSION': 'stable',
 
-bool _runningOnTravis;
+bool? _runningOnTravis;
+
 bool get runningOnTravis =>
     _runningOnTravis ??= Platform.environment['TRAVIS'] == 'true';
+
 String get _homePath =>
     (runningOnTravis ? Platform.environment['TRAVIS_HOME'] : null) ??
     userHomePath;
@@ -19,14 +20,14 @@ String get travisDartVersion =>
     Platform.environment['TRAVIS_DART_VERSION'] ?? 'stable';
 
 String get travisFlutterTop =>
-    '${_homePath}/.tekartik/travis/${travisDartVersion}/flutter';
+    '$_homePath/.tekartik/travis/$travisDartVersion/flutter';
 
 /// Try travis temp dir first
 String get travisTempDir =>
     Platform.environment['TRAVIS_TMPDIR'] ?? Directory.systemTemp.path;
 
 /// Create the envir file
-Future<String> travisCreateEnvFile({bool verbose}) async {
+Future<String> travisCreateEnvFile({bool? verbose}) async {
   verbose ??= false;
   var tempDir = await Directory(travisTempDir).createTemp();
 
@@ -34,7 +35,7 @@ Future<String> travisCreateEnvFile({bool verbose}) async {
 
   var content = '''
     
-export PATH=${travisFlutterTop}/bin:${travisFlutterTop}/bin/cache/dart-sdk/bin:\$PATH
+export PATH=$travisFlutterTop/bin:$travisFlutterTop/bin/cache/dart-sdk/bin:\$PATH
 
 ''';
 
@@ -61,7 +62,7 @@ Future main() async {
 
 /// Install flutter in the specified directory.
 Future install(
-    {@required String channel, @required String directory, bool force}) async {
+    {required String channel, required String directory, bool? force}) async {
   force ??= false;
   var shell = Shell();
 
@@ -91,7 +92,7 @@ Future install(
       // depth 1 not longer working
       // git clone https://github.com/flutter/flutter.git --depth 1 ${directory} -b stable
       await shell.run('''
-git clone https://github.com/flutter/flutter.git --branch ${channel} ${directory}
+git clone https://github.com/flutter/flutter.git --branch $channel $directory
 ''');
 
       // git clone https://github.com/flutter/flutter.git --depth 1 --branch ${channel} ${directory}
@@ -100,7 +101,7 @@ git clone https://github.com/flutter/flutter.git --branch ${channel} ${directory
     // Add to env
     var env = <String, String>{
       'PATH':
-          '${directory}/bin:${directory}/bin/cache/dart-sdk/bin:${shellEnvironment['PATH']}'
+          '$directory/bin:$directory/bin/cache/dart-sdk/bin:${shellEnvironment['PATH']}'
     };
     print(env);
     shell = Shell(
