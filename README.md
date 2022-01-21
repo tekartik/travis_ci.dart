@@ -13,7 +13,7 @@ dev_dependencies:
   test: any
   tekartik_travis_ci_flutter:
     git: 
-      url: git://github.com/tekartik/travis_ci_flutter.dart
+      url: https://github.com/tekartik/travis_ci_flutter.dart
       ref: dart2
     version: '>=0.1.0'
 ```

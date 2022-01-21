@@ -32,6 +32,6 @@ void main() {
       flutter packages get
       flutter test
       ''');
-    });
+    }, timeout: const Timeout(Duration(minutes: 5)));
   });
 }

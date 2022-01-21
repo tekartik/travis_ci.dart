@@ -14,7 +14,7 @@ Future main(List<String> arguments) async {
     stderr.writeln(parser.usage);
     return;
   }
-  final verbose = results['verbose'] as bool;
+  final verbose = results['verbose'] as bool?;
   // We write the path to be sourced
   stdout.write(await travisCreateEnvFile(verbose: verbose));
 }
