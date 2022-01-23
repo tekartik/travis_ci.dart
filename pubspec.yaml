@@ -1,6 +1,6 @@
 name: tekartik_travis_ci_flutter
 description: Travis CI flutter setup helper
-version: 0.2.3
+version: 0.3.0
 homepage: https://github.com/tekartik/travis_ci_flutter.dart
 
 
@@ -15,8 +15,8 @@ dependencies:
 dev_dependencies:
   dev_test:
   test:
-  pedantic:
   path:
+  lints:
 
 dependency_overrides:
 # tmp
