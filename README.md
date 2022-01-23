@@ -28,8 +28,8 @@ dart:
   - stable
   - dev
 before_script:
-  - pub run tekartik_travis_ci_flutter:install
-  - source $(pub run tekartik_travis_ci_flutter:env)
+  - dart run tekartik_travis_ci_flutter:install
+  - source $(dart run tekartik_travis_ci_flutter:env)
 script:
   - dart tool/travis.dart
 ````

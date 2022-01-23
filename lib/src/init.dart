@@ -3,5 +3,5 @@
 import 'package:process_run/shell_run.dart';
 
 Future init() async {
-  await run('pub run tekartik_travis_ci_flutter:env -h', verbose: false);
+  await run('dart run tekartik_travis_ci_flutter:env -h', verbose: false);
 }
