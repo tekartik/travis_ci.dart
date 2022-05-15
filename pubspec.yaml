@@ -11,11 +11,10 @@ dependencies:
   args:
   meta:
   process_run: '>=0.10.8'
-
+  path:
 dev_dependencies:
   dev_test:
   test:
-  path:
   lints:
 
 dependency_overrides:
