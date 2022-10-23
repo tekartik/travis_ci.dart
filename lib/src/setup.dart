@@ -126,7 +126,6 @@ git clone https://github.com/flutter/flutter.git --branch $channel $directory
 ''');
 
         // git clone https://github.com/flutter/flutter.git --depth 1 --branch ${channel} ${directory}
-
       }
       // Add to env
       var env = <String, String>{
